@@ -57,7 +57,7 @@ export default function Entries() {
                 type="date"
                 value={week}
                 onChange={(e) => setWeek(weekStartISO(new Date(e.target.value)))}
-                className="bg-transparent border-none text-[13px] font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-28"
+                className="bg-transparent border-none text-[13px] font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-full"
               />
             </div>
 
@@ -68,13 +68,12 @@ export default function Entries() {
                   { value: "all", label: "All Categories" },
                   ...categories.map(c => ({ value: c.key, label: c.label }))
                 ]}
-                className="h-10 py-1 px-3 rounded-xl shadow-sm"
                 onChange={e => setCategory(e.target.value as any)}
               />
             </div>
 
             <Link to="/entries/new" className="w-full sm:w-auto">
-              <Button variant="premium" className="w-full h-10 px-6 font-bold text-sm tracking-tight">+ Add Exposure</Button>
+              <Button variant="premium" className="w-full h-12 px-6 font-bold text-sm tracking-tight">+ Add Exposure</Button>
             </Link>
           </div>
         }
@@ -100,42 +99,83 @@ export default function Entries() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3">
-          {rows.map(e => (
-            <Link key={e.id} to={`/entries/${e.id}`} className="block group">
-              <Card padding="p-4 sm:p-5" className="flex justify-between items-center gap-4 transition-all hover:border-slate-300 border-slate-200/50">
-                <div className="flex-1 min-w-0 flex items-start gap-4">
-                  <div className="pt-1 shrink-0">
-                    <div className={`w-2 h-2 rounded-full shadow-sm ring-4 ring-white ${e.exposureLevel === 'high' ? 'bg-red-500' : e.exposureLevel === 'medium' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2.5 mb-1 text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-                      <span>{e.category.replace("_", " ")}</span>
+     <div className="grid grid-cols-1 gap-3">
+  {rows.map((e) => (
+    <Link key={e.id} to={`/entries/${e.id}`} className="block group">
+      <Card
+        padding="p-4 sm:p-5"
+        className="flex justify-between items-center gap-4 transition-all hover:border-slate-300 border-slate-200/50"
+      >
+        <div className="flex-1 min-w-0 flex items-start gap-4">
+          {/* Level Dot */}
+          <div className="pt-1 shrink-0">
+            <div
+              className={`w-2 h-2 rounded-full shadow-sm ring-4 ring-white ${
+                e.exposureLevel === "high"
+                  ? "bg-red-500"
+                  : e.exposureLevel === "medium"
+                  ? "bg-amber-400"
+                  : "bg-emerald-500"
+              }`}
+            />
+          </div>
 
-                    </div>
-                    <h4 className="text-[15px] font-bold text-slate-900 truncate tracking-tight mb-2 group-hover:text-primary transition-colors">{e.title}</h4>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <Badge level={e.exposureLevel} />
-                      <div className="flex flex-wrap gap-1">
-                        {e.tags?.map((t) => (
-                          <Chip key={t}>{t}</Chip>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-[9px] text-slate-300 font-bold uppercase tracking-widest shrink-0 pt-1">
-                    {new Date(e.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short' })}
-                  </span>
-                </div>
-                <div className="text-slate-200 group-hover:text-slate-900 transition-all group-hover:translate-x-1">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </div>
-              </Card>
-            </Link>
-          ))}
+          {/* Content */}
+          <div className="flex-1 min-w-0 relative">
+            {/* Date floating right */}
+            <span className="absolute top-0 right-0 text-[9px] text-slate-300 font-bold uppercase tracking-widest">
+              {new Date(e.createdAt).toLocaleDateString(undefined, {
+                day: "2-digit",
+                month: "short"
+              })}
+            </span>
+
+            {/* Category */}
+            <div className="flex items-center gap-2.5 mb-1 text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+              <span>{e.category.replace("_", " ")}</span>
+            </div>
+
+            {/* Title (padding-right prevents overlap with date) */}
+            <h4 className="text-[15px] font-bold text-slate-900 truncate tracking-tight mb-2 pr-16 group-hover:text-primary transition-colors">
+              {e.title}
+            </h4>
+
+            {/* Badge row */}
+            <div className="flex items-center gap-2 mb-2">
+              <Badge level={e.exposureLevel} />
+            </div>
+
+            {/* Tags - Full width row */}
+            {e.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 w-full">
+                {e.tags.map((t) => (
+                  <Chip key={t}>{t}</Chip>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Chevron */}
+        <div className="text-slate-200 group-hover:text-slate-900 transition-all group-hover:translate-x-1 shrink-0">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </div>
+      </Card>
+    </Link>
+  ))}
+</div>
+
       )}
     </div>
   );

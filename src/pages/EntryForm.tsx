@@ -1,5 +1,5 @@
 // src/pages/EntryForm.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db } from "../db/db";
 import type { Category, Entry, ExposureLevel } from "../db/types";
@@ -39,6 +39,8 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
   const [tagsText, setTagsText] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [errors, setErrors] = useState<{ title?: string }>({});
+  const titleRef = useRef<HTMLDivElement>(null);
 
   const tagSuggestions = useMemo(() => {
     return categories.find(c => c.key === category)?.tags ?? [];
@@ -67,8 +69,13 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
 
   async function save() {
     const cleanTitle = title.trim();
-    if (!cleanTitle) return;
+    if (!cleanTitle) {
+      setErrors({ title: "Identification is required to record this exposure." });
+      titleRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
 
+    setErrors({});
     setIsSaving(true);
     const tags = tagsText
       .split(",")
@@ -82,7 +89,7 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
         id: crypto.randomUUID(),
         title: cleanTitle,
         category,
-        exposureLevel: exposureLevel,
+        exposureLevel,
         notes: notes.trim() || undefined,
         tags,
         createdAt,
@@ -91,19 +98,23 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
       };
       await db.entries.put(entry);
       await enqueueSync("entry", entry.id);
-      nav("/entries");
+      setSaved(true);
+      setTimeout(() => nav("/entries"), 800);
       return;
     }
 
     if (!id) return;
     const existing = await db.entries.get(id);
-    if (!existing) return;
+    if (!existing) {
+      setIsSaving(false);
+      return;
+    }
 
     const updated: Entry = {
       ...existing,
       title: cleanTitle,
       category,
-      exposureLevel: exposureLevel,
+      exposureLevel,
       notes: notes.trim() || undefined,
       tags,
       weekStart: weekStartISO(new Date(existing.createdAt)),
@@ -142,22 +153,29 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
   );
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 fade-in">
+    <div className="max-w-2xl mx-auto space-y-8 fade-in pb-10">
       <PageHeader
         title={mode === "edit" ? "Edit Entry" : "New Exposure"}
         desc="Record detailed risk signatures into your private ledger."
       />
 
-      <Card padding="p-5 sm:p-6" className={`transition-all duration-500 border-slate-200/50 ${saved ? "ring-2 ring-emerald-500/20 bg-emerald-50/10" : "shadow-sm"}`}>
-        <div className="flex flex-col gap-6">
-          <Input
-            label="Title"
-            placeholder="What is the exposure?"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+      <Card padding="p-6 sm:p-10" className={`transition-all duration-500 border-slate-200/60 ${saved ? "ring-2 ring-emerald-500/20 bg-emerald-50/10" : "shadow-xl shadow-slate-900/5"}`}>
+        <div className="flex flex-col gap-8">
+          <section className="space-y-4" ref={titleRef}>
+            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Core Protocol</h4>
+            <Input
+              label="Title"
+              placeholder="e.g., Critical Counterparty Concentration"
+              value={title}
+              error={errors.title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (errors.title) setErrors({});
+              }}
+            />
+          </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
             <Select
               label="Category"
               value={category}
@@ -170,17 +188,19 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
               options={exposureLevels}
               onChange={(e) => setExposureLevel(e.target.value as ExposureLevel)}
             />
-          </div>
+          </section>
 
-          <TextArea
-            label="Notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Add more details here..."
-            className="min-h-[160px]"
-          />
+          <section className="space-y-4 pt-4 border-t border-slate-50">
+            <TextArea
+              label="Notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Describe the underlying fragility or context..."
+              className="min-h-[180px]"
+            />
+          </section>
 
-          <div className="space-y-4">
+          <section className="space-y-4 pt-4 border-t border-slate-50">
             <Input
               label="Tags"
               value={tagsText}
@@ -195,7 +215,7 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
                 ))}
               </div>
             ) : null}
-          </div>
+          </section>
 
           <div className="flex flex-col-reverse sm:flex-row gap-4 pt-10 border-t border-slate-100 items-center justify-between">
             <div className="flex gap-3 w-full sm:w-auto">
@@ -210,18 +230,12 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
                 </Button>
               )}
             </div>
-            <Button onClick={save} disabled={isSaving || saved} variant="premium" className="w-full sm:w-64 h-12 text-sm font-bold tracking-tight shadow-lg shadow-primary/20">
-              {saved ? "Entry Saved" : isSaving ? "Saving..." : mode === "create" ? "Add to Ledger" : "Apply Changes"}
+            <Button onClick={save} disabled={isSaving || saved} variant="premium" className="w-full sm:w-64 h-12 text-sm font-bold tracking-tight shadow-xl shadow-primary/20">
+              {saved ? "Entry Saved" : isSaving ? "Saving..." : mode === "create" ? "Save Entry" : "Save Changes"}
             </Button>
           </div>
         </div>
       </Card>
-
-      <div className="flex justify-center items-center gap-2 text-[9px] font-bold text-slate-300 uppercase tracking-widest py-6">
-        <span className="w-1 h-1 bg-slate-200 rounded-full" />
-        Your data is secure
-        <span className="w-1 h-1 bg-slate-200 rounded-full" />
-      </div>
     </div>
   );
 }

@@ -36,7 +36,12 @@ function useSyncStatus() {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { isOnline, pendingCount } = useSyncStatus();
+  // const { isOnline, pendingCount } = useSyncStatus();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <div className="min-h-screen flex flex-col selection:bg-slate-900 selection:text-white">
@@ -60,10 +65,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <nav className="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl border border-slate-200/40">
                 <NavItem to="/" label="Dashboard" />
                 <NavItem to="/entries" label="All Entries" />
+                <NavItem to="/assessments" label="Assessments" />
                 <NavItem to="/settings" label="Settings" />
               </nav>
 
-              <div className="flex items-center gap-3 pl-2 sm:pl-0">
+              {/* <div className="flex items-center gap-3 pl-2 sm:pl-0">
                 {pendingCount > 0 && (
                   <div className="flex items-center gap-2 px-2.5 py-1 bg-amber-50 rounded-full border border-amber-100 shadow-sm animate-in fade-in slide-in-from-right-2">
                     <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
@@ -80,8 +86,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <span className="text-[10px] font-bold uppercase tracking-widest hidden xs:inline">{isOnline ? "Online" : "Offline"}</span>
                 </div>
 
-                <PWAInstallButton />
-              </div>
+                </div> */}
+              <PWAInstallButton />
             </div>
           </div>
         </div>
@@ -95,6 +101,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex items-center justify-around h-16">
           <MobileNavItem to="/" label="Dashboard" icon={<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>} />
           <MobileNavItem to="/entries" label="Entries" icon={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></>} />
+          <MobileNavItem
+            to="/assessments"
+            label="assessments"
+            icon={
+              <>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M8 13h8" />
+                <path d="M8 17h6" />
+              </>
+            }
+          />
+
           <MobileNavItem to="/settings" label="Settings" icon={<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>} />
         </div>
       </div>

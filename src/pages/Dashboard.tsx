@@ -62,7 +62,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-6">
         <div className="space-y-1.5">
           <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Welcome.</h1>
-          <p className="text-sm text-slate-500 font-medium max-w-md">Your data is saved locally. {totalFragilities > 0 ? `${totalFragilities} high-risk exposures` : "No critical issues"} found this week.</p>
+          <p className="text-sm text-slate-500 font-medium max-w-md">{totalFragilities > 0 ? `${totalFragilities} high-risk exposures` : "No critical issues"} found this week.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
@@ -86,38 +86,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* PWA Install Promo
-      {!isInstalled && (
-        <Card padding="p-6" className="bg-slate-900 border-none shadow-2xl shadow-slate-900/40 group relative overflow-hidden animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="absolute inset-0 bg-linear-to-r from-primary/20 to-transparent pointer-events-none" />
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative">
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 group-hover:scale-105 transition-transform duration-500">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-lg font-bold text-white tracking-tight leading-none">Vault Setup: Native Performance</h4>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  {isInstallable ? "Download the PWA for offline-first sovereignty" : "Enable hardware integration in Vault Settings"}
-                </p>
-              </div>
-            </div>
-            {isInstallable ? (
-              <Button variant="premium" onClick={install} className="w-full sm:w-auto h-11 px-8 text-xs font-bold uppercase tracking-widest shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                Download Native Vault
-              </Button>
-            ) : (
-              <Link to="/settings" className="w-full sm:w-auto">
-                <Button variant="premium" className="w-full h-11 px-8 text-xs font-bold uppercase tracking-widest shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                  Setup Native Vault
-                </Button>
-              </Link>
-            )}
-          </div>
-        </Card>
-      )} */}
+    
 
       {/* Global Overview Section */}
       {!loading && (
@@ -150,7 +119,7 @@ export default function Dashboard() {
                 </div>
 
                 <Link to={`/assessments/${s.category}?week=${week}`} className="shrink-0">
-                  <Button variant="subtle" size="xs" className="px-4 h-9 font-bold group-hover:bg-slate-900 group-hover:text-white transition-all duration-300">
+                  <Button variant="premium" size="xs" className="px-4 h-9 font-bold group-hover:bg-slate-900 group-hover:text-white transition-all duration-300">
                     Audit
                   </Button>
                 </Link>
@@ -175,9 +144,9 @@ export default function Dashboard() {
                 </Link>
                 <div className={`
                   text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full
-                  ${s.level ? "text-emerald-700 bg-emerald-50" : "text-slate-300 bg-slate-50"}
+                  ${s.level ? "text-emerald-700 bg-emerald-50" : "text-slate-400 bg-slate-50"}
                 `}>
-                  {s.level ? "Snapshot Saved" : "In Progress"}
+                  {s.level ? "Saved" : "AWAITING"}
                 </div>
               </div>
             </Card>
