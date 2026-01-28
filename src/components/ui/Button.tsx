@@ -32,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       className={`
         inline-flex items-center justify-center gap-2 
-        rounded-lg font-semibold transition-all duration-200
+        rounded-xl font-bold transition-all duration-200
         active:scale-[0.98] outline-none
         disabled:opacity-40 disabled:pointer-events-none disabled:grayscale
         ${variants[variant]}

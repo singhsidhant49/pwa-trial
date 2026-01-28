@@ -45,13 +45,13 @@ export default function Entries() {
   }, [week, category]);
 
   return (
-    <div className="space-y-6 fade-in">
+    <div className="space-y-8 fade-in">
       <PageHeader
         title="Entry Log"
         desc="History of all recorded exposures."
         actions={
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end w-full sm:w-auto">
-            <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-lg h-9 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full sm:w-auto">
+            <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-3 rounded-xl h-12 shadow-sm">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Week Starting</span>
               <input
                 type="date"
@@ -61,20 +61,20 @@ export default function Entries() {
               />
             </div>
 
-            <div className="w-full sm:w-44">
+            <div className="w-full sm:w-48">
               <Select
                 value={category}
                 options={[
                   { value: "all", label: "All Categories" },
                   ...categories.map(c => ({ value: c.key, label: c.label }))
                 ]}
-                className="h-9 py-1 px-3"
+                className="h-10 py-1 px-3 rounded-xl shadow-sm"
                 onChange={e => setCategory(e.target.value as any)}
               />
             </div>
 
             <Link to="/entries/new" className="w-full sm:w-auto">
-              <Button variant="premium" size="sm" className="w-full h-9 px-4">+ Add Exposure</Button>
+              <Button variant="premium" className="w-full h-10 px-6 font-bold text-sm tracking-tight">+ Add Exposure</Button>
             </Link>
           </div>
         }
@@ -111,7 +111,7 @@ export default function Entries() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-1 text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                       <span>{e.category.replace("_", " ")}</span>
-                     
+
                     </div>
                     <h4 className="text-[15px] font-bold text-slate-900 truncate tracking-tight mb-2 group-hover:text-primary transition-colors">{e.title}</h4>
                     <div className="flex flex-wrap items-center gap-1.5">

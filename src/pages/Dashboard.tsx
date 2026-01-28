@@ -58,25 +58,26 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="space-y-6 fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome.</h1>
+    <div className="space-y-10 fade-in">
+      <div className="flex flex-col gap-6">
+        <div className="space-y-1.5">
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Welcome.</h1>
           <p className="text-sm text-slate-500 font-medium max-w-md">Your data is saved locally. {totalFragilities > 0 ? `${totalFragilities} high-risk exposures` : "No critical issues"} found this week.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white border border-slate-200 pl-3 pr-1 py-1 rounded-xl h-11 shadow-sm">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Week Starting</span>
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <div className="flex-1 flex items-center gap-2 bg-white border border-slate-200 pl-3 pr-2 py-3 rounded-xl h-12 shadow-sm">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none shrink-0">Week Starting</span>
             <input
               type="date"
               value={week}
               onChange={(e) => setWeek(weekStartISO(new Date(e.target.value)))}
-              className="bg-transparent border-none text-sm font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-28"
+              className="bg-transparent border-none text-sm font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer flex-1"
             />
           </div>
-          <Link to="/entries/new">
-            <Button variant="premium" className="h-11 px-6 text-sm font-bold tracking-tight text-nowrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+          <Link to="/entries/new" className="sm:shrink-0">
+            <Button variant="premium" className="w-full sm:w-auto h-12 px-8 text-sm font-bold tracking-tight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                 <path d="M12 5v14M5 12h14" />
               </svg>
               Add Exposure
@@ -120,7 +121,7 @@ export default function Dashboard() {
 
       {/* Global Overview Section */}
       {!loading && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 xs:grid-cols-2 lg:grid-cols-4 gap-4">
           <OverviewTile label="High Risk Focus" value={criticalCapped} sub="Categories" />
           <OverviewTile label="Identified Risks" value={totalFragilities} sub="Total" />
           <OverviewTile label="Avg Risk Score" value={avgScore || "—"} sub="Score" />
@@ -134,50 +135,49 @@ export default function Dashboard() {
           <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Loading Data</p>
         </div>
       ) : (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
           {summaries.map((s) => (
-            <Card key={s.category} padding="p-5 sm:p-6" className="flex flex-col group relative transition-all duration-300 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 border-slate-200/50 overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            <Card key={s.category} padding="p-6" className="flex flex-col group relative transition-all duration-500 hover:border-slate-300 hover:shadow-2xl hover:shadow-slate-900/5 border-slate-200/50 overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
 
-              <div className="flex justify-between items-start gap-4 mb-6 relative">
-                <div className="space-y-1.5">
-                  <h3 className="text-[16px] font-bold text-slate-900 tracking-tight leading-none group-hover:text-primary transition-colors">{labelFor(s.category)}</h3>
-                  <div className="flex gap-2.5 items-center">
+              <div className="flex justify-between items-start gap-4 mb-8 relative">
+                <div className="space-y-2">
+                  <h3 className="text-[18px] font-extrabold text-slate-900 tracking-tight leading-none group-hover:text-primary transition-colors">{labelFor(s.category)}</h3>
+                  <div className="flex gap-3 items-center">
                     {s?.level && <Badge level={s.level} />}
                     {s.trend && <TrendIndicator trend={s.trend} />}
                   </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
-
-                  <Link to={`/assessments/${s.category}?week=${week}`}>
-                    <Button variant="subtle" size="xs" className="px-3 h-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-300 shadow-sm">Audit Details</Button>
-                  </Link>
-                </div>
+                <Link to={`/assessments/${s.category}?week=${week}`} className="shrink-0">
+                  <Button variant="subtle" size="xs" className="px-4 h-9 font-bold group-hover:bg-slate-900 group-hover:text-white transition-all duration-300">
+                    Audit
+                  </Button>
+                </Link>
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5 mb-6">
-                <StatTile label="Total Entries" value={s.totalEntries} />
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <StatTile label="Entries" value={s.totalEntries} />
                 <StatTile label="High-Risk" value={s.highCount} highlight={s.highCount > 0} />
-                <StatTile label="Main Risk Type" value={s.dominantFactor ? formatFactor(s.dominantFactor) : (s.dominantTag || "None")} />
-                <StatTile label="Risk Score" value={s.score == null ? "—" : s.score} highlight={s.score && s.score > 10 ? true : false} />
+                <StatTile label="Main Factor" value={s.dominantFactor ? formatFactor(s.dominantFactor) : (s.dominantTag || "None")} />
+                <StatTile label="Score" value={s.score == null ? "—" : s.score} highlight={s.score && s.score > 10 ? true : false} />
               </div>
 
-              <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
                 <Link
                   to={`/entries?category=${s.category}&week=${week}`}
-                  className="text-[12px] font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-1.5 group/link"
+                  className="text-[13px] font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-2 group/link"
                 >
-                  Exposure Log
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/link:translate-x-1">
+                  View Exposure Log
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/link:translate-x-1">
                     <path d="M5 12h14m-7-7 7 7-7 7" />
                   </svg>
                 </Link>
                 <div className={`
-                  text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded
-                  ${s.level ? "text-emerald-600 bg-emerald-50/50" : "text-slate-300 bg-slate-50/50"}
+                  text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full
+                  ${s.level ? "text-emerald-700 bg-emerald-50" : "text-slate-300 bg-slate-50"}
                 `}>
-                  {s.level ? "Saved" : "Not Finished"}
+                  {s.level ? "Snapshot Saved" : "In Progress"}
                 </div>
               </div>
             </Card>

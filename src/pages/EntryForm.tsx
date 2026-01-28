@@ -142,15 +142,10 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
   );
 
   return (
-    <div className="mx-auto space-y-6 fade-in">
+    <div className="max-w-2xl mx-auto space-y-8 fade-in">
       <PageHeader
-        title={mode === "edit" ? "Edit Exposure" : "Add Exposure"}
-        desc="Record new risks or issues found this week."
-        actions={
-          <Link to="/entries">
-            <Button variant="secondary" size="sm">Cancel</Button>
-          </Link>
-        }
+        title={mode === "edit" ? "Edit Entry" : "New Exposure"}
+        desc="Record detailed risk signatures into your private ledger."
       />
 
       <Card padding="p-5 sm:p-6" className={`transition-all duration-500 border-slate-200/50 ${saved ? "ring-2 ring-emerald-500/20 bg-emerald-50/10" : "shadow-sm"}`}>
@@ -202,16 +197,21 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
             ) : null}
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row gap-4 pt-8 border-t border-slate-100 items-center justify-between">
+          <div className="flex flex-col-reverse sm:flex-row gap-4 pt-10 border-t border-slate-100 items-center justify-between">
             <div className="flex gap-3 w-full sm:w-auto">
+              <Link to="/entries" className="flex-1 sm:flex-none">
+                <Button variant="secondary" className="w-full h-12 px-8 font-bold text-sm">
+                  Cancel
+                </Button>
+              </Link>
               {mode === "edit" && (
-                <Button onClick={remove} variant="danger" size="sm" className="opacity-40 hover:opacity-100 transition-opacity">
+                <Button onClick={remove} variant="danger" className="flex-1 sm:flex-none h-12 px-6 opacity-40 hover:opacity-100 transition-opacity font-bold">
                   Delete
                 </Button>
               )}
             </div>
-            <Button onClick={save} disabled={isSaving || saved} variant="premium" className="flex-1 sm:w-56 h-11">
-              {saved ? "Saved" : isSaving ? "Saving..." : mode === "create" ? "Save Entry" : "Save Changes"}
+            <Button onClick={save} disabled={isSaving || saved} variant="premium" className="w-full sm:w-64 h-12 text-sm font-bold tracking-tight shadow-lg shadow-primary/20">
+              {saved ? "Entry Saved" : isSaving ? "Saving..." : mode === "create" ? "Add to Ledger" : "Apply Changes"}
             </Button>
           </div>
         </div>

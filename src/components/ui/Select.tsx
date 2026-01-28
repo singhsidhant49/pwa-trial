@@ -12,8 +12,8 @@ export const Select: React.FC<SelectProps> = ({ label, options, className = "", 
             <div className="relative">
                 <select
                     className={`
-            w-full bg-white border border-slate-200 rounded-lg h-11 pl-4 pr-10
-            text-sm text-slate-900 appearance-none
+            w-full bg-white border border-slate-200 rounded-xl h-12 pl-4 pr-10
+            text-sm font-medium text-slate-900 appearance-none
             transition-all duration-200 outline-none
             hover:border-slate-300 cursor-pointer
             focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900

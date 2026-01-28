@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col selection:bg-slate-900 selection:text-white">
-    
+
       <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 sm:h-20">
@@ -71,13 +71,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   </div>
                 )}
                 <div className={`
-                  flex items-center gap-2 px-3 py-1 rounded-full border transition-all duration-300
+                  flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all duration-300
                   ${isOnline
                     ? "bg-slate-50 border-slate-200/60 text-slate-600"
                     : "bg-red-50 border-red-100 text-red-600"}
                 `}>
                   <div className={`w-1.5 h-1.5 rounded-full ${isOnline ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-red-500 animate-pulse"}`} />
-                  <span className="text-[9px] font-bold uppercase tracking-widest hidden xs:inline">{isOnline ? "Online" : "Offline"}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest hidden xs:inline">{isOnline ? "Online" : "Offline"}</span>
                 </div>
 
                 <PWAInstallButton />
@@ -126,7 +126,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
         <div className="mt-8 text-center">
-          <p className="text-[9px] font-bold text-slate-300 tracking-widest uppercase font-mono">© 2026 Personal Risk Ledger • Ver 1.4.2</p>
+          <p className="text-[9px] font-bold text-slate-300 tracking-widest uppercase font-mono">© 2026 Personal Risk Ledger • Ver 1.5.0</p>
         </div>
       </footer>
     </div>
@@ -159,12 +159,14 @@ function MobileNavItem({ to, label, icon }: { to: string, label: string, icon: R
   return (
     <Link
       to={to}
-      className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${active ? "text-slate-900" : "text-slate-400"}`}
+      className={`flex flex-col items-center justify-center gap-1.5 flex-1 h-full transition-all duration-200 ${active ? "text-slate-900 scale-105" : "text-slate-400 hover:text-slate-600"}`}
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        {icon}
-      </svg>
-      <span className="text-[10px] font-bold uppercase tracking-tight">{label}</span>
+      <div className={`p-1 rounded-lg transition-colors ${active ? "bg-slate-100" : ""}`}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          {icon}
+        </svg>
+      </div>
+      <span className="text-[10px] font-extrabold uppercase tracking-tight">{label}</span>
     </Link>
   );
 }

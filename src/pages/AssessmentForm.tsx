@@ -156,26 +156,26 @@ export default function AssessmentForm() {
   }
 
   return (
-    <div className="fade-in">
+    <div className="max-w-4xl mx-auto space-y-8 fade-in">
       {/* Sticky Score Dashboard */}
-      <div className="sticky top-16 sm:top-20 z-40 bg-slate-50/50 pt-2 pb-2">
-        <Card padding="px-5 py-3" className="flex items-center justify-between shadow-lg shadow-slate-900/5 border-slate-200/60 bg-white/90 backdrop-blur-xl">
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Risk score</span>
-              <span className="text-xl font-extrabold text-slate-900 tabular-nums leading-none">{preview ? preview.score : "—"}</span>
+      <div className="sticky top-16 sm:top-20 z-40 bg-slate-50/50 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <Card padding="px-4 py-3 sm:px-6 sm:py-4" className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 shadow-xl shadow-slate-900/5 border-slate-200/60 bg-white/95 backdrop-blur-xl rounded-2xl">
+          <div className="flex items-center justify-between sm:justify-start gap-8">
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Risk Score</span>
+              <span className="text-2xl font-black text-slate-900 tabular-nums leading-none tracking-tight">{preview ? preview.score : "—"}</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Risk Level</span>
-              <div className="h-4 flex items-center">
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Risk Level</span>
+              <div className="flex items-center">
                 <Badge level={preview?.level ?? null} />
               </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {saved && <span className="text-[9px] font-bold text-emerald-600 tracking-widest animate-in fade-in zoom-in">SAVED</span>}
-            <Button variant="premium" onClick={saveSnapshot} disabled={loading || saved} className="px-6 h-10">
-              {saved ? "Saved" : "Save Check-in"}
+            {saved && <span className="flex-1 text-center sm:text-right text-[10px] font-bold text-emerald-600 tracking-widest animate-in fade-in zoom-in">CHANGES SAVED</span>}
+            <Button variant="premium" onClick={saveSnapshot} disabled={loading || saved} className="flex-1 sm:flex-none px-8 h-12 text-sm font-bold tracking-tight shadow-lg shadow-primary/20">
+              {saved ? "Success" : "Save Progress"}
             </Button>
           </div>
         </Card>
@@ -183,16 +183,16 @@ export default function AssessmentForm() {
 
       <div className="mt-4 space-y-4">
         <PageHeader
-          title={`${title} Check-in`}
-          desc={`Weekly assessment for ${week}.`}
+          title={`${title} Audit`}
+          desc={`Weekly assessment protocol for the period of ${week}.`}
           actions={
-            <div className="flex items-center gap-2 bg-white border border-slate-200 px-2 py-1 rounded-lg h-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Week Starting</span>
+            <div className="flex items-center gap-3 bg-white border border-slate-200 pl-3 pr-1 py-1 rounded-xl h-10 shadow-sm w-full sm:w-auto">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap leading-none">Week Starting</span>
               <input
                 type="date"
                 value={week}
                 onChange={(e) => setWeek(weekStartISO(new Date(e.target.value)))}
-                className="bg-transparent border-none text-[12px] font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-24"
+                className="bg-transparent border-none text-[13px] font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer flex-1 sm:w-28"
               />
             </div>
           }

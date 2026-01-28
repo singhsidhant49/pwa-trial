@@ -11,7 +11,7 @@ export const Input: React.FC<InputProps> = ({ label, helper, className = "", ...
             {label && <label className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{label}</label>}
             <input
                 className={`
-          w-full bg-white border border-slate-200 rounded-lg h-11 px-4
+          w-full bg-white border border-slate-200 rounded-xl h-12 px-4
           text-sm text-slate-900 placeholder:text-slate-400
           transition-all duration-200 outline-none
           hover:border-slate-300

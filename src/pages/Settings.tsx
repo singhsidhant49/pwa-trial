@@ -80,11 +80,10 @@ export default function Settings() {
   }
 
   return (
-    <div className=" mx-auto space-y-6 fade-in px-4">
+    <div className=" mx-auto space-y-8 fade-in">
       <PageHeader
         title="Settings"
-        desc="Manage your data locally and securely."
-        className="px-0"
+        desc="Technical control over your local data ledger."
       />
 
       <Card padding="p-6 sm:p-8" className="space-y-10 border-slate-200/50 shadow-xl shadow-slate-900/5">
@@ -159,7 +158,7 @@ export default function Settings() {
               </Button>
             )}
 
-           
+
 
             {isInstalled && (
               <div className="flex items-center justify-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 italic opacity-60 font-medium">
@@ -170,7 +169,7 @@ export default function Settings() {
               </div>
             )}
 
-           
+
           </div>
         </section>
 
@@ -187,9 +186,7 @@ export default function Settings() {
         </section>
       </Card>
 
-      <div className="text-center pt-8 opacity-40">
-        <p className="text-[9px] font-bold text-slate-300 tracking-[0.3em] uppercase font-mono">Version 1.4.2 • Secure</p>
-      </div>
+            
     </div>
   );
 }
