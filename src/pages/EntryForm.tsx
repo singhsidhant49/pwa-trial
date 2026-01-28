@@ -144,11 +144,11 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
   return (
     <div className="mx-auto space-y-6 fade-in">
       <PageHeader
-        title={mode === "edit" ? "Record Revision" : "Document Exposure"}
-        desc="Capturing structural fragility signatures for the primary ledger."
+        title={mode === "edit" ? "Edit Exposure" : "Add Exposure"}
+        desc="Record new risks or issues found this week."
         actions={
           <Link to="/entries">
-            <Button variant="ghost" size="sm">Discard</Button>
+            <Button variant="secondary" size="sm">Cancel</Button>
           </Link>
         }
       />
@@ -156,21 +156,21 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
       <Card padding="p-5 sm:p-6" className={`transition-all duration-500 border-slate-200/50 ${saved ? "ring-2 ring-emerald-500/20 bg-emerald-50/10" : "shadow-sm"}`}>
         <div className="flex flex-col gap-6">
           <Input
-            label="Exposure identifier"
-            placeholder="Title of recorded event..."
+            label="Title"
+            placeholder="What is the exposure?"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Select
-              label="System class"
+              label="Category"
               value={category}
               options={categories.map(c => ({ value: c.key, label: c.label }))}
               onChange={(e) => setCategory(e.target.value as Category)}
             />
             <Select
-              label="Assessed level"
+              label="Exposure Level"
               value={exposureLevel}
               options={exposureLevels}
               onChange={(e) => setExposureLevel(e.target.value as ExposureLevel)}
@@ -178,19 +178,19 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
           </div>
 
           <TextArea
-            label="Contextual Details"
+            label="Notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Detail any triggers or mitigating factors..."
+            placeholder="Add more details here..."
             className="min-h-[160px]"
           />
 
           <div className="space-y-4">
             <Input
-              label="System metadata (Tags)"
+              label="Tags"
               value={tagsText}
               onChange={(e) => setTagsText(e.target.value)}
-              placeholder="Comma separated tags..."
+              placeholder="Add tags separated by commas..."
             />
 
             {tagSuggestions.length ? (
@@ -206,12 +206,12 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
             <div className="flex gap-3 w-full sm:w-auto">
               {mode === "edit" && (
                 <Button onClick={remove} variant="danger" size="sm" className="opacity-40 hover:opacity-100 transition-opacity">
-                  Purge Entry
+                  Delete
                 </Button>
               )}
             </div>
             <Button onClick={save} disabled={isSaving || saved} variant="premium" className="flex-1 sm:w-56 h-11">
-              {saved ? "Protocol Verified" : isSaving ? "Sealing..." : mode === "create" ? "Commit to Ledger" : "Synchronize Record"}
+              {saved ? "Saved" : isSaving ? "Saving..." : mode === "create" ? "Save Entry" : "Save Changes"}
             </Button>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default function EntryForm({ mode }: { mode: "create" | "edit" }) {
 
       <div className="flex justify-center items-center gap-2 text-[9px] font-bold text-slate-300 uppercase tracking-widest py-6">
         <span className="w-1 h-1 bg-slate-200 rounded-full" />
-        Sovereign Encryption Layer Active
+        Your data is secure
         <span className="w-1 h-1 bg-slate-200 rounded-full" />
       </div>
     </div>

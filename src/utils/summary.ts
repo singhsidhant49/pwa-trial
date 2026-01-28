@@ -62,7 +62,7 @@ export async function buildWeeklySummary(weekStart: string, category: Category):
 }
 
 export async function getCategoryHistory(category: Category, weeks = 4) {
-  // Simple implementation: fetch last N weeks
+  //  fetch last N weeks
   const results: number[] = [];
   const now = new Date();
   for (let i = 0; i < weeks; i++) {

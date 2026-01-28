@@ -1,5 +1,4 @@
-// src/pages/Dashboard.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import type { Category } from "../db/types";
 import { weekStartISO } from "../utils/dates";
@@ -7,8 +6,10 @@ import { buildWeeklySummary } from "../utils/summary";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Badge } from "../components/ui/Badge";
+import { OverviewTile } from "../components/ui/OverviewTile";
+import { StatTile } from "../components/ui/StatTile";
 import { getCategoryHistory } from "../utils/summary";
-import { usePWAInstall } from "../hooks/usePWAInstall";
+// import { usePWAInstall } from "../hooks/usePWAInstall";
 
 const categories: { key: Category; label: string }[] = [
   { key: "financial", label: "Financial Health" },
@@ -22,7 +23,7 @@ export default function Dashboard() {
   const [week, setWeek] = useState(weekStartISO());
   const [loading, setLoading] = useState(true);
   const [summaries, setSummaries] = useState<any[]>([]);
-  const { isInstallable, isInstalled, install } = usePWAInstall();
+  // const { isInstallable, isInstalled, install } = usePWAInstall();
 
   useEffect(() => {
     let alive = true;
@@ -41,37 +42,44 @@ export default function Dashboard() {
     return () => { alive = false; };
   }, [week]);
 
-  const totalFragilities = summaries.reduce((acc, s) => acc + s.highCount, 0);
-  const avgScore = summaries.length ? Math.round(summaries.reduce((acc, s) => acc + (s.score || 0), 0) / summaries.length) : null;
-  const criticalCapped = summaries.filter(s => s.level === 'high').length;
+  const totalFragilities = useMemo(() =>
+    summaries.reduce((acc, s) => acc + (s.highCount || 0), 0),
+    [summaries]
+  );
+
+  const avgScore = useMemo(() => {
+    if (!summaries.length) return null;
+    return Math.round(summaries.reduce((acc, s) => acc + (s.score || 0), 0) / summaries.length);
+  }, [summaries]);
+
+  const criticalCapped = useMemo(() =>
+    summaries.filter(s => s.level === 'high').length,
+    [summaries]
+  );
 
   return (
     <div className="space-y-6 fade-in">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse" />
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Daily Protocol Active</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome, Keeper.</h1>
-          <p className="text-sm text-slate-500 font-medium max-w-md">Your sovereign vault is synchronized. {totalFragilities > 0 ? `${totalFragilities} high-risk exposures` : "Zero critical signals"} recorded in the current audit pool.</p>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome.</h1>
+          <p className="text-sm text-slate-500 font-medium max-w-md">Your data is saved locally. {totalFragilities > 0 ? `${totalFragilities} high-risk exposures` : "No critical issues"} found this week.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 bg-white border border-slate-200 pl-3 pr-1 py-1 rounded-xl h-11 shadow-sm">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Audit Week</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Week Starting</span>
             <input
               type="date"
               value={week}
-              onChange={(e) => setWeek(e.target.value)}
+              onChange={(e) => setWeek(weekStartISO(new Date(e.target.value)))}
               className="bg-transparent border-none text-sm font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-28"
             />
           </div>
           <Link to="/entries/new">
-            <Button variant="premium" className="h-11 px-6 text-sm font-bold tracking-tight">
+            <Button variant="premium" className="h-11 px-6 text-sm font-bold tracking-tight text-nowrap">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
                 <path d="M12 5v14M5 12h14" />
               </svg>
-              Document Exposure
+              Add Exposure
             </Button>
           </Link>
         </div>
@@ -114,22 +122,21 @@ export default function Dashboard() {
       {!loading && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <OverviewTile label="High Risk Focus" value={criticalCapped} sub="Categories" />
-          <OverviewTile label="Active Drains" value={totalFragilities} sub="Identified" />
-          <OverviewTile label="Avg Risk Level" value={avgScore || "—"} sub="Protocol Score" />
-          <OverviewTile label="Vault Integrity" value="99.4%" sub="Local Encryption" />
+          <OverviewTile label="Identified Risks" value={totalFragilities} sub="Total" />
+          <OverviewTile label="Avg Risk Score" value={avgScore || "—"} sub="Score" />
+          <OverviewTile label="Data Security" value="100%" sub="Local Storage" />
         </div>
       )}
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-32 text-slate-400 space-y-3">
           <div className="w-5 h-5 border-2 border-slate-200 border-t-slate-900 rounded-full animate-spin"></div>
-          <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Decrypting Ledgers</p>
+          <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Loading Data</p>
         </div>
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           {summaries.map((s) => (
             <Card key={s.category} padding="p-5 sm:p-6" className="flex flex-col group relative transition-all duration-300 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 border-slate-200/50 overflow-hidden">
-              {/* Premium Accent Line */}
               <div className="absolute top-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
 
               <div className="flex justify-between items-start gap-4 mb-6 relative">
@@ -150,10 +157,10 @@ export default function Dashboard() {
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 mb-6">
-                <StatTile label="Observations" value={s.totalEntries} />
+                <StatTile label="Total Entries" value={s.totalEntries} />
                 <StatTile label="High-Risk" value={s.highCount} highlight={s.highCount > 0} />
-                <StatTile label="Primary Driver" value={s.dominantFactor ? formatFactor(s.dominantFactor) : (s.dominantTag || "Optimized")} />
-                <StatTile label="Calculated Risk" value={s.score == null ? "—" : s.score} highlight={s.score && s.score > 10 ? true : false} />
+                <StatTile label="Main Risk Type" value={s.dominantFactor ? formatFactor(s.dominantFactor) : (s.dominantTag || "None")} />
+                <StatTile label="Risk Score" value={s.score == null ? "—" : s.score} highlight={s.score && s.score > 10 ? true : false} />
               </div>
 
               <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -170,7 +177,7 @@ export default function Dashboard() {
                   text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded
                   ${s.level ? "text-emerald-600 bg-emerald-50/50" : "text-slate-300 bg-slate-50/50"}
                 `}>
-                  {s.level ? "Protocol Verified" : "Awaiting Seal"}
+                  {s.level ? "Saved" : "Not Finished"}
                 </div>
               </div>
             </Card>
@@ -181,26 +188,7 @@ export default function Dashboard() {
   );
 }
 
-function OverviewTile({ label, value, sub }: { label: string; value: string | number; sub: string }) {
-  return (
-    <Card padding="px-4 py-3" className="border-slate-200/50 bg-white shadow-[0_2px_4px_rgba(0,0,0,0.01)] hover:border-slate-300 transition-colors">
-      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2">{label}</p>
-      <div className="flex items-baseline gap-1.5">
-        <span className="text-xl font-extrabold text-slate-900 leading-none tracking-tight">{value}</span>
-        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{sub}</span>
-      </div>
-    </Card>
-  );
-}
-
-function StatTile({ label, value, highlight }: { label: string; value: string | number; highlight?: boolean }) {
-  return (
-    <div className="flex flex-col gap-1 px-3 py-2 bg-slate-50/50 rounded-lg border border-slate-100/30">
-      <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">{label}</span>
-      <span className={`text-[13px] font-bold truncate leading-none ${highlight ? "text-red-600" : "text-slate-700"}`}>{value}</span>
-    </div>
-  );
-}
+// Helper components and utilities
 
 function labelFor(c: string) {
   return (

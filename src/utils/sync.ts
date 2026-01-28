@@ -27,11 +27,11 @@ export async function runSync() {
         })
       });
 
-      if (!response.ok) throw new Error("Network protocol rejection");
+      if (!response.ok) throw new Error("Server error during sync");
 
       // If success, proceed to clear outbox below
     } catch (e) {
-      console.warn("Production Sync Failed: Service unreachable. Sustaining local vault state.", e);
+      console.warn("Sync failed: Could not connect to server. Data is still saved on your device.", e);
       return; // Stop here! Don't clear the outbox if the server didn't get it.
     }
   }
@@ -47,7 +47,7 @@ export async function runSync() {
 
   // 3. Clear Processed Queue
   await db.outbox.clear();
-  console.log(`Vault Synchronized: ${items.length} signatures committed to registry.`);
+  console.log(`Sync complete: ${items.length} entries saved.`);
 }
 
 export function setupOnlineSync() {

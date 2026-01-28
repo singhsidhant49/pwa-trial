@@ -8,7 +8,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 export const Select: React.FC<SelectProps> = ({ label, options, className = "", ...props }) => {
     return (
         <div className="flex flex-col gap-1.5 w-full">
-            {label && <label className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{label}</label>}
+            {label && <label className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{label}</label>}
             <div className="relative">
                 <select
                     className={`

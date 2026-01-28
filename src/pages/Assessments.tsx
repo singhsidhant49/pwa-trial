@@ -18,8 +18,8 @@ export default function Assessments() {
   return (
     <div className="space-y-8 fade-in">
       <PageHeader
-        title="Risk Assessments"
-        desc="Structured check-ins to quantify fragility across categories."
+        title="Assessments"
+        desc="Check-ins to track risks and health."
       />
 
       <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
@@ -31,17 +31,17 @@ export default function Assessments() {
             </div>
 
             <Link to={`/assessments/${c.key}`} className="mt-auto">
-              <Button variant="secondary" size="sm" className="w-full">Run Check-in</Button>
+              <Button variant="secondary" size="sm" className="w-full">Start Check-in</Button>
             </Link>
           </Card>
         ))}
       </div>
 
       <Card className="bg-slate-900/2 border-slate-200/50 p-6 sm:p-8">
-        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-3">The Care Principle</h4>
+        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-3">Our Principles</h4>
         <p className="text-sm text-slate-500 leading-relaxed max-w-2xl font-medium">
-          These assessments are designed for awareness, not anxiety. There are no notifications, no alarms, and no judgment.
-          Use them to see where fragility is building so you can make informed adjustments in your own time.
+          These check-ins are for your awareness. There are no alarms or judgments.
+          Use them to see where risks are building over time.
         </p>
       </Card>
     </div>

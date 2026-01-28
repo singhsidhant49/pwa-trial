@@ -23,7 +23,7 @@ export default function Entries() {
   const loc = useLocation();
   const qs = new URLSearchParams(loc.search);
 
-  const [week, setWeek] = useState(qs.get("week") || weekStartISO());
+  const [week, setWeek] = useState(weekStartISO(qs.get("week") ? new Date(qs.get("week")!) : new Date()));
   const [category, setCategory] = useState<Category | "all">(qs.get("category") as any || "all");
   const [rows, setRows] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,16 +47,16 @@ export default function Entries() {
   return (
     <div className="space-y-6 fade-in">
       <PageHeader
-        title="Exposure Log"
-        desc="Chronological history of recorded exposures."
+        title="Entry Log"
+        desc="History of all recorded exposures."
         actions={
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end w-full sm:w-auto">
             <div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-lg h-9 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Week</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Week Starting</span>
               <input
                 type="date"
                 value={week}
-                onChange={(e) => setWeek(e.target.value)}
+                onChange={(e) => setWeek(weekStartISO(new Date(e.target.value)))}
                 className="bg-transparent border-none text-[13px] font-bold text-slate-900 focus:ring-0 p-0 cursor-pointer w-28"
               />
             </div>
@@ -65,7 +65,7 @@ export default function Entries() {
               <Select
                 value={category}
                 options={[
-                  { value: "all", label: "All Record Classes" },
+                  { value: "all", label: "All Categories" },
                   ...categories.map(c => ({ value: c.key, label: c.label }))
                 ]}
                 className="h-9 py-1 px-3"
@@ -74,7 +74,7 @@ export default function Entries() {
             </div>
 
             <Link to="/entries/new" className="w-full sm:w-auto">
-              <Button variant="premium" size="sm" className="w-full h-9 px-4">+ Document Exposure</Button>
+              <Button variant="premium" size="sm" className="w-full h-9 px-4">+ Add Exposure</Button>
             </Link>
           </div>
         }
@@ -92,11 +92,11 @@ export default function Entries() {
             </svg>
           </div>
           <div className="space-y-1 mb-6">
-            <h4 className="text-[16px] font-bold text-slate-900 tracking-tight">Exposure Log Clear</h4>
-            <p className="text-xs text-slate-500 max-w-[240px]">No risk patterns or exposures recorded for this period.</p>
+            <h4 className="text-[16px] font-bold text-slate-900 tracking-tight">Log is Clear</h4>
+            <p className="text-xs text-slate-500 max-w-[240px]">No risk patterns or exposures found for this week.</p>
           </div>
           <Link to="/entries/new">
-            <Button variant="primary" size="xs" className="px-6 h-8">Seal Record</Button>
+            <Button variant="primary" size="xs" className="px-6 h-8">Add Exposure</Button>
           </Link>
         </div>
       ) : (
@@ -111,17 +111,7 @@ export default function Entries() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-1 text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                       <span>{e.category.replace("_", " ")}</span>
-                      {e.pendingSync ? (
-                        <div className="flex items-center gap-1.5 px-1.5 py-0.5 bg-amber-50 rounded text-[8px] font-bold text-amber-700 uppercase tracking-widest border border-amber-100/50">
-                          <span className="w-0.5 h-0.5 bg-amber-500 rounded-full animate-pulse" />
-                          Vaulting
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1.5 px-1.5 py-0.5 bg-emerald-50 rounded text-[8px] font-bold text-emerald-700 uppercase tracking-widest border border-emerald-100/50">
-                          <span className="w-0.5 h-0.5 bg-emerald-500 rounded-full" />
-                          Protocol Verified
-                        </div>
-                      )}
+                     
                     </div>
                     <h4 className="text-[15px] font-bold text-slate-900 truncate tracking-tight mb-2 group-hover:text-primary transition-colors">{e.title}</h4>
                     <div className="flex flex-wrap items-center gap-1.5">
