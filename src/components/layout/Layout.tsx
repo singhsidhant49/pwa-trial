@@ -1,39 +1,39 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 
-function useSyncStatus() {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [pendingCount, setPendingCount] = useState(0);
+// function useSyncStatus() {
+//   const [isOnline, setIsOnline] = useState(navigator.onLine);
+//   const [pendingCount, setPendingCount] = useState(0);
 
-  useEffect(() => {
-    const handle = () => setIsOnline(navigator.onLine);
-    window.addEventListener("online", handle);
-    window.addEventListener("offline", handle);
+//   useEffect(() => {
+//     const handle = () => setIsOnline(navigator.onLine);
+//     window.addEventListener("online", handle);
+//     window.addEventListener("offline", handle);
 
-    // Initial and periodic check for pending syncs
-    const checkPending = async () => {
-      try {
-        const { db } = await import("../../db/db");
-        const count = await db.outbox.count();
-        setPendingCount(count);
-      } catch (e) {
-        console.error("Sync count fail", e);
-      }
-    };
+//     // Initial and periodic check for pending syncs
+//     const checkPending = async () => {
+//       try {
+//         const { db } = await import("../../db/db");
+//         const count = await db.outbox.count();
+//         setPendingCount(count);
+//       } catch (e) {
+//         console.error("Sync count fail", e);
+//       }
+//     };
 
-    checkPending();
-    const timer = setInterval(checkPending, 5000);
+//     checkPending();
+//     const timer = setInterval(checkPending, 5000);
 
-    return () => {
-      window.removeEventListener("online", handle);
-      window.removeEventListener("offline", handle);
-      clearInterval(timer);
-    };
-  }, []);
+//     return () => {
+//       window.removeEventListener("online", handle);
+//       window.removeEventListener("offline", handle);
+//       clearInterval(timer);
+//     };
+//   }, []);
 
-  return { isOnline, pendingCount };
-}
+//   return { isOnline, pendingCount };
+// }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   // const { isOnline, pendingCount } = useSyncStatus();
